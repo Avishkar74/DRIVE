@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
+const userRoutes = require('./routes/user.route')
 
-app.get('/', (req,res) => {
-    res.render('index');
-})
+app.use('/user',userRoutes)
+
+
 
 app.set('view engine' , 'ejs');
 
