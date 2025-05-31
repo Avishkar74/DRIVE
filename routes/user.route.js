@@ -65,14 +65,22 @@ router.post(
 
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid username or password" });
-    }
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    }    const token = jwt.sign({
+       userId: user._id,
+       username: user.username,
+       email: user.email
+      }, process.env.JWT_SECRET);
     
     res.cookie("token",token);
 
     res.send("logged in");
   }
 );
+
+// Add a logout route to clear cookies
+router.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.redirect("/user/login");
+});
 
 module.exports = router;
