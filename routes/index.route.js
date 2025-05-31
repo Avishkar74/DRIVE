@@ -1,26 +1,21 @@
 const express = require('express')
 const router = express.Router() 
 const upload = require('../config/multer.config')
+const fileModel = require('../models/files.model')
 
 router.get('/home', (req, res) => {
     res.render('home')
 })
 
-router.post('/upload-file', upload.single('file'), (req, res) => {
-    if (!req.file) {
-        console.log("No file was uploaded")
-        return res.status(400).json({ 
-            success: false,
-            message: "No file was uploaded" 
-        })
-    }
+router.post('/upload-file', upload.single('file'), async (req, res) => {
 
-    console.log("File uploaded successfully:", req.file.originalname)
-    res.status(200).json({
-        success: true,
-        message: "File uploaded successfully",
-        file: req.file
+    const newFile = await fileModel.create({
+        path: req.file.path,
+        originalName: req.file.originalname,
+        user: req.user._id
     })
+
+    
 })
 
 module.exports = router
